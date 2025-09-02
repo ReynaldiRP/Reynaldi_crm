@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,12 @@ class CustomerFactory extends Factory
     public function definition(): array
     {
         return [
-            
+            'name' => $this->faker->name(),
+            'phone' => $this->faker->phoneNumber(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'address' => $this->faker->address(),
+            'user_id' => $this->faker->randomElement(User::pluck('id')),
+            'status' => $this->faker->randomElement(['active', 'inactive']),
         ];
     }
 }

@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Customer;
+use App\Models\Lead;
+use App\Models\Product;
 use App\Models\Role;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -15,14 +18,15 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-        
-        Role::factory()->count(2)->create();
-        User::factory()->create([
-            'role_id' => 1,
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => bcrypt('password'),
-        ]);
 
+        Role::factory()->count(2)->create()->each(function ($role) {
+            User::factory()->count(5)->create([
+                'role_id' => $role->id,
+            ]);
+        });
+
+        Product::factory()->count(10)->create();
+        Customer::factory()->count(10)->create();
+        Lead::factory()->count(10)->create();
     }
 }

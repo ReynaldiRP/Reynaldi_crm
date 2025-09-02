@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,15 @@ class LeadFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'user_id' => $this->faker->randomElement(User::pluck('id')),
+            'name' => $this->faker->name(),
+            'phone_number' => $this->faker->phoneNumber(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'address' => $this->faker->address(),
+            'needs' => $this->faker->sentence(),
+            'status' => $this->faker->randomElement(['new', 'contacted', 'qualified', 'lost']),
+            'converted_at' => $this->faker->dateTimeBetween('-1 year', 'now'),
+            'converted_to_customer_id' => $this->faker->randomElement(Customer::pluck('id'))
         ];
     }
 }
