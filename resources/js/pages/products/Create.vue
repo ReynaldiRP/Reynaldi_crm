@@ -138,7 +138,6 @@ const form = useForm({
 
 const submit = () => {
     form.sale_price = sumSalePrice.value;
-    console.log(form.data());
 
     form.post(store.url(), {
         onSuccess: () => {

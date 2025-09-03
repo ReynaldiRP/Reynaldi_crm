@@ -16,3 +16,8 @@ export const formatCurrency = (value: number): string => {
 export const status = (value: boolean): string => {
     return value ? 'Active' : 'Inactive';
 };
+
+export const profitMargin = (costPrice: number, salePrice: number): number => {
+    if (costPrice === 0) return 0;
+    return ((salePrice - costPrice) / costPrice) * 100;
+};

@@ -17,14 +17,14 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Products',
-        href: products.index(),
-        icon: Store,
-    },
-    {
         title: 'Leads',
         href: '/leads',
         icon: LucideUser2,
+    },
+    {
+        title: 'Products',
+        href: products.index(),
+        icon: Store,
     },
 ];
 
