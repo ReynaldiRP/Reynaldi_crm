@@ -34,6 +34,11 @@ class Lead extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function convertedToCustomer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class, 'converted_to_customer_id');
+    }
+
     public function scopeVisibleTo(Builder $query, User $user)
     {
         if ($user->isManager()) {

@@ -4,6 +4,7 @@ import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import leads from '@/routes/leads';
 import products from '@/routes/products';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
@@ -18,7 +19,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Leads',
-        href: '/leads',
+        href: leads.index(),
         icon: LucideUser2,
     },
     {

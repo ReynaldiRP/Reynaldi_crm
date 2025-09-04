@@ -27,6 +27,11 @@ class Customer extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function leads()
+    {
+        return $this->hasMany(Lead::class, 'converted_to_customer_id');
+    }
+
     public function scopeVisibleTo(Builder $query, User $user)
     {
         if ($user->isManager()) {

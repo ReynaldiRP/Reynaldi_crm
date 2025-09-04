@@ -152,7 +152,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { formatCurrency, profitMargin, status } from '@/lib/utils';
 import { edit } from '@/routes/products';
 import { BreadcrumbItem } from '@/types';
-import { Product } from '@/types/products';
+import { Product } from '@/types/product';
 import { Head, router } from '@inertiajs/vue3';
 import { ArrowLeft, DollarSign, Edit, Package, Percent, TrendingUp } from 'lucide-vue-next';
 import Badge from 'primevue/badge';

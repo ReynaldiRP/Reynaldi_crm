@@ -119,7 +119,7 @@ import Label from '@/components/ui/label/Label.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { update } from '@/routes/products';
 import { BreadcrumbItem } from '@/types';
-import { Product } from '@/types/products';
+import { Product } from '@/types/product';
 import { Head, useForm } from '@inertiajs/vue3';
 import { InputNumber, InputText, RadioButton, RadioButtonGroup, useToast } from 'primevue';
 

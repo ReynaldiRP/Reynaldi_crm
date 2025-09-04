@@ -4,8 +4,8 @@
         <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-2 sm:p-4">
             <div class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 p-3 sm:p-5 md:min-h-min dark:border-sidebar-border">
                 <PlaceholderPattern class="pointer-events-none" />
-                <Button variant="default" size="lg" @click="() => router.visit('/products/create')" class="mb-4 w-full cursor-pointer sm:w-auto">
-                    Add Products
+                <Button variant="default" size="lg" @click="() => router.visit(create.url())" class="mb-4 w-full cursor-pointer sm:w-auto">
+                    Add Lead
                 </Button>
 
                 <DataTable
@@ -13,7 +13,7 @@
                     scrollDirection="horizontal"
                     :scrollHeight="'400px'"
                     v-model:filters="filters"
-                    :value="products"
+                    :value="leads"
                     showGridlines
                     dataKey="id"
                     ref="dt"
@@ -46,46 +46,41 @@
                             </div>
                         </div>
                     </template>
-                    <template #empty> No Products found. </template>
+                    <template #empty> No Leads found. </template>
 
                     <Column header="No.">
                         <template #body="slotProps">
                             {{ slotProps.index + 1 }}
                         </template>
                     </Column>
-                    <Column field="code" sortable header="Product Code">
-                        <template #body="{ data }">
-                            {{ data.code }}
-                        </template>
-                    </Column>
-                    <Column field="name" sortable header="Product Name">
+                    <Column field="name" sortable header="Lead Name">
                         <template #body="{ data }">
                             {{ data.name }}
                         </template>
                     </Column>
-                    <Column field="description" sortable header="Product Description">
+                    <Column field="phone_number" sortable header="Phone">
                         <template #body="{ data }">
-                            {{ data.description }}
+                            {{ data.phone_number }}
                         </template>
                     </Column>
-                    <Column field="cost_price" sortable header="Product Cost Price">
+                    <Column field="email" sortable header="Email">
                         <template #body="{ data }">
-                            {{ formatCurrency(data.cost_price) }}
+                            {{ data.email }}
                         </template>
                     </Column>
-                    <Column field="margin_percent" sortable header="Product Margin Percent">
+                    <Column field="address" sortable header="Address">
                         <template #body="{ data }">
-                            {{ data.margin_percent }}
+                            {{ data.address }}
                         </template>
                     </Column>
-                    <Column field="sale_price" sortable header="Product Sale Price">
+                    <Column field="needs" sortable header="Needs">
                         <template #body="{ data }">
-                            {{ formatCurrency(data.sale_price) }}
+                            {{ data.needs }}
                         </template>
                     </Column>
-                    <Column field="active" sortable header="Product Active">
+                    <Column field="status" sortable header="Status">
                         <template #body="{ data }">
-                            {{ status(data.active) }}
+                            {{ data.status }}
                         </template>
                     </Column>
                     <Column header="Actions">
@@ -110,10 +105,10 @@
                     </Column>
                 </DataTable>
             </div>
-            <Dialog v-model:visible="showModals" modal header="Delete Product">
+            <Dialog v-model:visible="showModals" modal header="Delete Lead">
                 <div class="flex flex-col gap-4">
-                    <p>Are you sure you want to delete this product?</p>
-                    <Button variant="destructive" size="lg" @click="() => deleteHandler(selectedProductId!)" class="cursor-pointer">Confirm</Button>
+                    <p>Are you sure you want to delete this lead?</p>
+                    <Button variant="destructive" size="lg" @click="() => deleteHandler(selectedLeadId!)" class="cursor-pointer">Confirm</Button>
                     <Button variant="secondary" size="lg" @click="closeDeleteModal">Cancel</Button>
                 </div>
             </Dialog>
@@ -125,38 +120,34 @@
 import PlaceholderPattern from '@/components/PlaceholderPattern.vue';
 import Button from '@/components/ui/button/Button.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { formatCurrency, status } from '@/lib/utils';
-import { destroy, edit, show } from '@/routes/products';
+import { create, destroy, edit, show } from '@/routes/leads';
 import { BreadcrumbItem } from '@/types';
-import { Product } from '@/types/product';
+import { Lead } from '@/types/lead';
 import { Head, router } from '@inertiajs/vue3';
 import { FilterMatchMode } from '@primevue/core/api';
 import { ExternalLink, FilterX, Search } from 'lucide-vue-next';
 import { Column, DataTable, Dialog, IconField, InputIcon, InputText, useToast } from 'primevue';
 import { ref } from 'vue';
 
-const props = defineProps<{
-    products: Product[];
-}>();
-
-const toast = useToast();
-
-const products = ref<Product[]>(props.products);
-const selectedProductId = ref<number | null>(null);
-const showModals = ref(false);
-
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Products',
-        href: '/products',
+        title: 'Leads',
+        href: '/leads',
     },
 ];
 
+const props = defineProps<{
+    leads: Lead[];
+}>();
+
+const leads = ref(props.leads);
 const filters = ref({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
-
 const dt = ref<typeof DataTable | null>(null);
+const selectedLeadId = ref<number | null>(null);
+const showModals = ref(false);
+const toast = useToast();
 
 const clearFilter = () => {
     filters.value.global.value = null;
@@ -168,23 +159,22 @@ const exportCSV = () => {
     }
 };
 
-const editHandler = (productId: number) => {
-    router.visit(edit.url({ product: productId }));
+const editHandler = (leadId: number) => {
+    router.visit(edit.url({ lead: leadId }));
 };
 
-const openDeleteModal = (productId: number) => {
-    selectedProductId.value = productId;
+const openDeleteModal = (leadId: number) => {
+    selectedLeadId.value = leadId;
     showModals.value = true;
 };
 
 const closeDeleteModal = () => {
     showModals.value = false;
-    selectedProductId.value = null;
+    selectedLeadId.value = null;
 };
 
-const deleteHandler = async (productId: number) => {
-    console.log('Deleting product with ID:', productId);
-    router.delete(destroy.url({ product: productId }), {
+const deleteHandler = async (leadId: number) => {
+    router.delete(destroy.url({ lead: leadId }), {
         preserveScroll: true,
         onSuccess: () => {
             toast.add({
@@ -194,10 +184,10 @@ const deleteHandler = async (productId: number) => {
                 life: 3000,
             });
 
-            products.value = products.value.filter((product) => product.id !== productId);
+            leads.value = leads.value.filter((lead) => lead.id !== leadId);
         },
         onError: (errors) => {
-            console.error('Error deleting customer:', errors);
+            console.error(errors);
             toast.add({
                 severity: 'error',
                 summary: 'Error',
@@ -211,8 +201,8 @@ const deleteHandler = async (productId: number) => {
     });
 };
 
-const viewHandler = (productId: number) => {
-    router.visit(show.url({ product: productId }));
+const viewHandler = (leadId: number) => {
+    router.visit(show.url({ lead: leadId }));
 };
 </script>
 
